@@ -1,13 +1,13 @@
-import express from "express";
-import { prisma } from "./db/prisma.js";
+import express from 'express';
+import { prisma } from './db/prisma.js';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, Prisma!");
+app.get('/', (req, res) => {
+  res.send('Hello, Prisma!');
 });
 
 app.listen(PORT, () => {
@@ -15,7 +15,7 @@ app.listen(PORT, () => {
 });
 
 // 앱 종료 시 Prisma 연결 정리
-process.on("SIGINT", async () => {
+process.on('SIGINT', async () => {
   await prisma.$disconnect();
   process.exit(0);
 });

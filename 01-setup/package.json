@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env src/server.js",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "npx prettier --write .",
+    "format:check": "npx prettier --check ."
   },
   "keywords": [],
   "author": "",
