@@ -1,0 +1,10 @@
+// Prisma Client 생성 설정
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+// 데이터베이스 연결 설정
+datasource db {
+  provider = "postgresql"
+}
