@@ -4,22 +4,33 @@
   "description": "",
   "main": "server.js",
   "type": "module",
+  "imports": {
+    "#generated/*": "./generated/*",
+    "#config": "./src/config/config.js",
+    "#db/*": "./src/db/*"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
-    "dev": "nodemon --env-file=.env src/server.js",
+    "dev": "nodemon --env-file=./env/.env.development src/server.js",
+    "prod": "node --env-file=./env/.env.production src/server.js",
+    "prisma:migrate": "dotenv -e ./env/.env.development -- npx prisma migrate dev",
+    "prisma:studio": "dotenv -e ./env/.env.development -- npx prisma studio",
+    "prisma:generate": "dotenv -e ./env/.env.development -- npx prisma generate",
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": ">=22.0.0"
-  },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "dotenv-cli": "^11.0.0",
     "express": "^5.2.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
