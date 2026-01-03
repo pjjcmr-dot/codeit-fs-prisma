@@ -15,7 +15,7 @@
     "prisma:migrate": "dotenv -e ./env/.env.development -- npx prisma migrate dev",
     "prisma:studio": "dotenv -e ./env/.env.development -- npx prisma studio",
     "prisma:generate": "dotenv -e ./env/.env.development -- npx prisma generate",
-    "seed": "node --env-file=./env/.env.production scripts/seed.js",
+    "seed": "node --env-file=./env/.env.development scripts/seed.js",
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check ."
   },
