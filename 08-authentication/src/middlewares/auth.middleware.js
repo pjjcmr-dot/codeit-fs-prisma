@@ -1,19 +1,22 @@
 import { verifyToken } from '#utils/jwt.util.js';
 import { prisma } from '#db';
+import { HTTP_STATUS, ERROR_MESSAGE } from '#constants';
 
 export const authMiddleware = async (req, res, next) => {
   try {
     const { accessToken } = req.cookies;
 
     if (!accessToken) {
-      return res.status(401).json({ message: '인증 정보가 없습니다.' });
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .json({ error: ERROR_MESSAGE.NO_AUTH_TOKEN });
     }
 
     const payload = verifyToken(accessToken, 'access');
 
     if (!payload) {
-      return res.status(401).json({
-        message: '인증 정보가 유효하지 않습니다.',
+      return res.status(HTTP_STATUS.UNAUTHORIZED).json({
+        error: ERROR_MESSAGE.INVALID_TOKEN,
       });
     }
 
@@ -23,8 +26,8 @@ export const authMiddleware = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(401).json({
-        message: '인증 정보와 일치하는 사용자가 없습니다.',
+      return res.status(HTTP_STATUS.UNAUTHORIZED).json({
+        error: ERROR_MESSAGE.USER_NOT_FOUND_FROM_TOKEN,
       });
     }
 
@@ -32,8 +35,8 @@ export const authMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.error('인증 미들웨어 오류:', error);
-    return res.status(500).json({
-      message: '인증 처리 중 오류가 발생했습니다.',
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      error: ERROR_MESSAGE.AUTH_FAILED,
     });
   }
 };
