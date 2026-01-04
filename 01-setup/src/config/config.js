@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { flattenError, z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z
@@ -17,7 +17,8 @@ const parseEnvironment = () => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('환경 변수 검증 실패:', error.errors);
+      const { fieldErrors } = flattenError(error);
+      console.error('환경 변수 검증 실패:', fieldErrors);
     }
     process.exit(1);
   }
