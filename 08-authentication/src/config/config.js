@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { flattenError, z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z
@@ -6,7 +6,7 @@ const envSchema = z.object({
     .default('development'),
   PORT: z.coerce.number().min(1000).max(65535).default(5001),
   DATABASE_URL: z.url(),
-  JWT_ACCESS_SECRET: z.string().min(32),
+  JWT_ACCESS_SECRET: z.string({ }).min(32, { }),
   JWT_REFRESH_SECRET: z.string().min(32),
 });
 
@@ -21,7 +21,8 @@ const parseEnvironment = () => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('환경 변수 검증 실패:', error.errors);
+      const tree = flattenError(error);
+      console.error(tree);
     }
     process.exit(1);
   }

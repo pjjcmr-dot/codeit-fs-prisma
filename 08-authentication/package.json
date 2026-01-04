@@ -9,7 +9,9 @@
     "#config": "./src/config/config.js",
     "#db/*": "./src/db/*",
     "#repository": "./src/repository/index.js",
-    "#constants": "./src/constants/index.js"
+    "#constants": "./src/constants/index.js",
+    "#utils/*": "./src/utils/*",
+    "#middlewares/*": "./src/middlewares/*"
   },
   "scripts": {
     "dev": "nodemon --env-file=./env/.env.development src/server.js",
