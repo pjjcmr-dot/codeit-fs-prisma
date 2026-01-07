@@ -1,26 +1,24 @@
 import express from 'express';
-import { prisma } from '#db/prisma.js';
 import { hashPassword, comparePassword } from '#utils/hash.util.js';
 import { generateTokens } from '#utils/jwt.util.js';
 import { setAuthCookies } from '#utils/cookie.util.js';
 import { validate } from '#middlewares/validation.middleware.js';
 import { HTTP_STATUS, ERROR_MESSAGE } from '#constants';
 import { signUpSchema, loginSchema } from './auth.schemas.js';
+import { usersRepository } from '#repository';
 
-export const authsRouter = express.Router();
+export const authRouter = express.Router();
 
-authsRouter.post('/signup', validate(signUpSchema), async (req, res, next) => {
+authRouter.post('/signup', validate(signUpSchema), async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
 
     const hashedPassword = await hashPassword(password);
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-      },
+    const user = await usersRepository.createUser({
+      email,
+      password: hashedPassword,
+      name,
     });
 
     const tokens = generateTokens(user);
@@ -33,13 +31,11 @@ authsRouter.post('/signup', validate(signUpSchema), async (req, res, next) => {
   }
 });
 
-authsRouter.post('/login', validate(loginSchema), async (req, res, next) => {
+authRouter.post('/login', validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await usersRepository.findUserByEmail(email);
 
     if (!user) {
       return res.status(HTTP_STATUS.UNAUTHORIZED).json({

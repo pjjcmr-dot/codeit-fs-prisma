@@ -47,6 +47,12 @@ function findAllUsersWithPosts() {
   });
 }
 
+function findUserByEmail(email) {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+}
+
 export const usersRepository = {
   createUser,
   findUserById,
@@ -55,4 +61,5 @@ export const usersRepository = {
   deleteUser,
   findUserWithPosts,
   findAllUsersWithPosts,
+  findUserByEmail,
 };
