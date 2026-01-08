@@ -15,7 +15,7 @@
     "#exceptions": "./src/exceptions/index.js"
   },
   "scripts": {
-    "dev": "node --env-file=./env/.env.development ./src/server.js",
+    "dev": "nodemon --env-file=./env/.env.development ./src/server.js",
     "prod": "node --env-file=./env/.env.production src/server.js",
     "prisma:push": "dotenv -e ./env/.env.development -- npx prisma db push",
     "prisma:migrate": "dotenv -e ./env/.env.development -- npx prisma migrate dev",

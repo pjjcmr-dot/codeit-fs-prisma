@@ -1,11 +1,15 @@
-import { verifyToken } from '#utils';
-import { prisma } from '#db/prisma.js';
+import {
+  verifyToken,
+  shouldRefreshToken,
+  refreshTokens,
+  setAuthCookies,
+} from '#utils';
 import { ERROR_MESSAGE } from '#constants';
 import { UnauthorizedException } from '#exceptions';
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    const { accessToken } = req.cookies;
+    const { accessToken, refreshToken } = req.cookies;
 
     if (!accessToken) {
       throw new UnauthorizedException(ERROR_MESSAGE.NO_AUTH_TOKEN);
@@ -16,16 +20,15 @@ export const authMiddleware = async (req, res, next) => {
       throw new UnauthorizedException(ERROR_MESSAGE.INVALID_TOKEN);
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: { id: true, email: true, name: true },
-    });
+    req.user = { id: payload.userId };
 
-    if (!user) {
-      throw new UnauthorizedException(ERROR_MESSAGE.USER_NOT_FOUND_FROM_TOKEN);
+    if (shouldRefreshToken(payload) && refreshToken) {
+      const newTokens = await refreshTokens(refreshToken);
+      if (newTokens) {
+        setAuthCookies(res, newTokens);
+      }
     }
 
-    req.user = user;
     next();
   } catch (error) {
     next(error);
