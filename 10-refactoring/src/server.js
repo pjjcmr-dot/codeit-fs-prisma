@@ -3,7 +3,7 @@ import { prisma } from './db/prisma.js';
 import { config } from '#config';
 import { router as apiRouter } from './routes/index.js';
 import cookieParser from 'cookie-parser';
-import { errorHandler } from '#middlewares/errorHandler.middleware.js';
+import { errorHandler } from '#middlewares';
 
 const app = express();
 

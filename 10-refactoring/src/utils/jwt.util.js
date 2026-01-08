@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { config } from '#config';
+import { MINUTE_IN_SECONDS } from '#constants';
+import { usersRepository } from '#repository';
 
 // Access Token 생성 (15분 유효)
 export const generateAccessToken = (user) => {
@@ -17,7 +19,7 @@ export const generateAccessToken = (user) => {
 
 // Refresh Token 생성 (7일 유효)
 export const generateRefreshToken = (user) => {
-  return jwt.sign({ userId: user.id }, process.env.JWT_REFRESH_SECRET, {
+  return jwt.sign({ userId: user.id }, config.JWT_REFRESH_SECRET, {
     expiresIn: '7d',
   });
 };
@@ -41,4 +43,29 @@ export const verifyToken = (token, tokenType = 'access') => {
     console.error('Token verification error:', error.message);
     return null;
   }
+};
+
+// Access Token 자동 갱신 (만료 5분 전)
+export const shouldRefreshToken = (payload) => {
+  if (!payload || !payload.exp) return false;
+
+  const expiresIn = payload.exp - Math.floor(Date.now() / 1000);
+
+  return expiresIn < MINUTE_IN_SECONDS * 5 && expiresIn > 0;
+};
+
+// Refresh Token으로 새 Access Token 발급
+export const refreshTokens = async (refreshToken) => {
+  const payload = verifyToken(refreshToken, 'refresh');
+
+  if (!payload) {
+    return null;
+  }
+
+  const user = await usersRepository.findUserById(payload.userId);
+  if (!user) {
+    return null;
+  }
+
+  return generateTokens({ id: user.id, name: user.name });
 };

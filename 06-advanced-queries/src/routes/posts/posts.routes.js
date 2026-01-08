@@ -105,8 +105,8 @@ postsRouter.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/posts/:id - 게시글 정보 수정
-postsRouter.put('/:id', async (req, res) => {
+// PATCH /api/posts/:id - 게시글 정보 수정
+postsRouter.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, published } = req.body;

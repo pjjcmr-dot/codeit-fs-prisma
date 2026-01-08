@@ -105,8 +105,8 @@ postsRouter.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/posts/:id - 게시글 정보 수정
-postsRouter.put('/:id', async (req, res) => {
+// PATCH /api/posts/:id - 게시글 정보 수정
+postsRouter.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, published } = req.body;
@@ -218,8 +218,8 @@ postsRouter.post('/batch', async (req, res) => {
   }
 });
 
-// DELETE /api/posts/:id - 게시글과 댓글 함께 삭제
-postsRouter.delete('/:id', async (req, res) => {
+// DELETE /api/posts/:id/with-comments - 게시글과 댓글 함께 삭제
+postsRouter.delete('/:id/with-comments', async (req, res) => {
   try {
     const { id } = req.params;
     const result = await postRepository.deleteWithComments(id);

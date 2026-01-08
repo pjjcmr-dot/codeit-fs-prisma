@@ -1,27 +1,40 @@
 import { isProduction } from '#config';
 import { flattenError } from 'zod';
-import { HTTP_STATUS, ERROR_MESSAGE } from '#constants';
+import { ERROR_MESSAGE } from '#constants';
+import { BadRequestException } from '#exceptions';
 
-export const validate = (schema) => (req, res, next) => {
-  const result = schema.safeParse(req.body);
-
-  if (!result.success) {
-    const { fieldErrors } = flattenError(result.error);
-
-    if (isProduction) {
-      return res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success: false,
-        message: ERROR_MESSAGE.INVALID_INPUT,
-      });
-    }
-
-    return res.status(HTTP_STATUS.BAD_REQUEST).json({
-      success: false,
-      message: ERROR_MESSAGE.VALIDATION_FAILED,
-      details: fieldErrors,
-    });
+/**
+ * 범용 검증 미들웨어
+ * @param {string} target - 검증할 대상 ('body', 'params', 'query')
+ * @param {ZodSchema} schema - Zod 스키마
+ */
+export const validate = (target, schema) => {
+  if (!['body', 'query', 'params'].includes(target)) {
+    throw new Error(
+      `[validate middleware] Invalid target: "${target}". Expected "body", "query", or "params".`,
+    );
   }
+  return (req, res, next) => {
+    try {
+      const result = schema.safeParse(req[target]);
 
-  req.body = result.data;
-  next();
+      if (!result.success) {
+        const { fieldErrors } = flattenError(result.error);
+
+        if (isProduction) {
+          throw new BadRequestException(ERROR_MESSAGE.INVALID_INPUT);
+        }
+
+        throw new BadRequestException(
+          ERROR_MESSAGE.VALIDATION_FAILED,
+          fieldErrors,
+        );
+      }
+
+      req[target] = result.data;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
 };
