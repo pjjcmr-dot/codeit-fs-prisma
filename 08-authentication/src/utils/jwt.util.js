@@ -17,7 +17,7 @@ export const generateAccessToken = (user) => {
 
 // Refresh Token 생성 (7일 유효)
 export const generateRefreshToken = (user) => {
-  return jwt.sign({ userId: user.id }, process.env.JWT_REFRESH_SECRET, {
+  return jwt.sign({ userId: user.id }, config.JWT_REFRESH_SECRET, {
     expiresIn: '7d',
   });
 };

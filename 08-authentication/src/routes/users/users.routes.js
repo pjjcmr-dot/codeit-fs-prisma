@@ -66,8 +66,8 @@ usersRouter.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/users/:id - 사용자 정보 수정
-usersRouter.put('/:id', async (req, res) => {
+// PATCH /api/users/:id - 사용자 정보 수정
+usersRouter.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { email, name } = req.body;
