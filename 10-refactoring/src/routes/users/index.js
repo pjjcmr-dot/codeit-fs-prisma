@@ -1,8 +1,8 @@
 import express from 'express';
 import { usersRouter } from './users.routes.js';
-import { postsRouter } from './posts/index.js';
+import { userPostsRouter } from './posts/index.js';
 
 export const userRouter = express.Router();
 
 userRouter.use('/', usersRouter);
-userRouter.use('/:id/posts', postsRouter);
+userRouter.use('/:id/posts', userPostsRouter);
