@@ -1,8 +1,8 @@
 import express from 'express';
-import { userPostsRouter } from './user-posts.routes.js';
+import { userPostsRouter as router } from './user-posts.routes.js';
 
-export const postsRouter = express.Router({
+export const userPostsRouter = express.Router({
   mergeParams: true,
 });
 
-postsRouter.use('/', userPostsRouter);
+userPostsRouter.use('/', router);
