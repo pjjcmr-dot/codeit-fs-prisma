@@ -2,7 +2,10 @@ console.log('seed...');
 
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 843d95535fefb78ffb3df6e5d6e3ea621b03643d
 import { faker } from '@faker-js/faker';
 
 const NUM_USERS_TO_CREATE = 5;
@@ -71,6 +74,7 @@ async function main(prisma) {
 }
 
 // Prisma Client 설정
+<<<<<<< HEAD
 import pkg from 'pg';
 const { Pool } = pkg;
 
@@ -81,6 +85,12 @@ const pool = new Pool({
 });
 
 const adapter = new PrismaPg(pool);
+=======
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+
+>>>>>>> 843d95535fefb78ffb3df6e5d6e3ea621b03643d
 const prisma = new PrismaClient({ adapter });
 
 main(prisma)

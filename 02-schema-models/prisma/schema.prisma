@@ -1,5 +1,14 @@
+<<<<<<< HEAD
+=======
+generator client {
+  provider = "prisma-client-js"
+   output   = "./node_modules/.prisma/client"
+}
+
+>>>>>>> 843d95535fefb78ffb3df6e5d6e3ea621b03643d
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_postgresql://postgres:whdwkd123%25@localhost:5432/prisma_blog_practice2")  // 따옴표 안에 변수명만!
 }
 
 generator client {
@@ -23,4 +32,4 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
+}//postgres:whdwkd123%25@localhost:5432/prisma_blog_practice2"
