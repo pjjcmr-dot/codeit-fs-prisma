@@ -43,8 +43,9 @@ CREATE DATABASE prisma_blog;
 cp env/.env.example env/.env.development
 # env/.env.development 파일을 열어 DATABASE_URL 수정
 # DATABASE_URL="postgresql://username:password@localhost:5432/prisma_blog"
-
-# 4. 개발 서버 실행
+#4. 생성
+npx prisma generate
+# 5. 개발 서버 실행
 npm run dev
 ```
 
