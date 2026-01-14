@@ -15,6 +15,7 @@
     "prisma:migrate": "dotenv -e ./env/.env.development -- npx prisma migrate dev",
     "prisma:studio": "dotenv -e ./env/.env.development -- npx prisma studio",
     "prisma:generate": "dotenv -e ./env/.env.development -- npx prisma generate",
+    "seed": "node --env-file=./env/.env.development scripts/seed.js",
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check ."
   },
@@ -34,9 +35,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@faker-js/faker": "^10.2.0",
     "eslint": "^9.39.2",
     "nodemon": "^3.1.11",
     "prettier": "^3.7.4",
-    "prisma": "^7.2.0"
+    "prisma": "^6.19.2"
   }
 }
