@@ -2,10 +2,10 @@ import express from 'express';
 import { HTTP_STATUS, PRISMA_ERROR, ERROR_MESSAGE } from '#constants';
 import { usersRepository } from '#repository';
 
-export const userRouter = express.Router();
+export const usersRouter = express.Router();
 
 // GET /api/users - 모든 사용자 조회
-userRouter.get('/', async (req, res) => {
+usersRouter.get('/', async (req, res) => {
   try {
     const users = await usersRepository.findAllUsers();
     res.json(users);
@@ -17,7 +17,7 @@ userRouter.get('/', async (req, res) => {
 });
 
 // GET /api/users/:id - 특정 사용자 조회
-userRouter.get('/:id', async (req, res) => {
+usersRouter.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await usersRepository.findUserById(id);
@@ -37,7 +37,7 @@ userRouter.get('/:id', async (req, res) => {
 });
 
 // POST /api/users - 새 사용자 생성
-userRouter.post('/', async (req, res) => {
+usersRouter.post('/', async (req, res) => {
   try {
     const { email, name } = req.body;
 
@@ -67,7 +67,7 @@ userRouter.post('/', async (req, res) => {
 });
 
 // PATCH /api/users/:id - 사용자 정보 수정
-userRouter.patch('/:id', async (req, res) => {
+usersRouter.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { email, name } = req.body;
@@ -98,7 +98,7 @@ userRouter.patch('/:id', async (req, res) => {
 });
 
 // DELETE /api/users/:id - 사용자 삭제
-userRouter.delete('/:id', async (req, res) => {
+usersRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await usersRepository.deleteUser(id);

@@ -1,7 +1,8 @@
 import express from 'express';
-import { userRouter } from './users.routes.js';
+import { userRouter } from './users/index.js';
+import { postRouter } from './posts/index.js';
 
 export const router = express.Router();
 
-// /api/users 경로에 User 라우터 연결
 router.use('/users', userRouter);
+router.use('/posts', postRouter);

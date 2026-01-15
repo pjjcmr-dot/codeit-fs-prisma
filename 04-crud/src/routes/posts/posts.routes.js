@@ -7,14 +7,47 @@ export const postsRouter = express.Router();
 // GET /api/posts - 모든 게시글 조회 (작성자 포함)
 postsRouter.get('/', async (req, res) => {
   try {
-    const posts = await postRepository.findAllPosts({
-      author: true,
-    });
-    res.json(posts);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await postRepository.getPostsWithPagination(page, limit);
+    res.json(result);
   } catch (_) {
     res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ error: ERROR_MESSAGE.FAILED_TO_FETCH_POSTS });
+  }
+});
+
+// GET /api/posts/search?q=검색어 - 게시글 검색
+postsRouter.get('/search', async (req, res) => {
+  try {
+    const { q: search } = req.query;
+
+    if (!search) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ error: ERROR_MESSAGE.SEARCH_QUERY_REQUIRED });
+    }
+
+    const posts = await postRepository.searchPosts(search);
+    res.json({ posts });
+  } catch (_) {
+    res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ error: ERROR_MESSAGE.FAILED_TO_SEARCH_POSTS });
+  }
+});
+
+// GET /api/posts/published - 공개 게시글만 조회
+postsRouter.get('/published', async (req, res) => {
+  try {
+    const posts = await postRepository.getPublishedPosts();
+    res.json({ posts });
+  } catch (_) {
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      error: ERROR_MESSAGE.FAILED_TO_FETCH_PUBLISHED_POSTS,
+    });
   }
 });
 
@@ -114,7 +147,3 @@ postsRouter.delete('/:id', async (req, res) => {
       .json({ error: ERROR_MESSAGE.FAILED_TO_DELETE_POST });
   }
 });
-
-
-
-
